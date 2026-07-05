@@ -112,6 +112,84 @@ def get_dashboard_snapshot(task_limit=5, journal_limit=3):
     }
 
 
+
+""" ZAHRA'S MODULES: NEURAL JOURNAL & MEMORY CORE LOGIC """
+
+
+def save_journal_entry(content, mood=None):
+    """Saves a private reflection usng schema structure"""
+    if not content or not content.strip():
+        raise ValueError("Journal content cannot be empty.")
+        
+    conn = get_connection()
+    try:
+        timestamp = datetime.now().isoformat(sep=" ", timespec="seconds")
+        
+        conn.execute(
+            "INSERT INTO journal_entries (content, mood, created_at) VALUES (?, ?, ?)",
+            (content.strip(), mood.strip() if mood else None, timestamp)
+        )
+        conn.commit()
+        return True
+    except sqlite3.Error as e:
+        print(f"Database error while saving journal: {e}")
+        return False
+    finally:
+        conn.close()
+
+
+def search_journal_entries(keyword):
+    """Searches past journal entries using a keyword or phrase"""
+    if not keyword or not keyword.strip():
+        return []
+        
+    conn = get_connection()
+    search_query = f"%{keyword.strip()}%"
+    rows = conn.execute(
+        "SELECT id, content, mood, created_at FROM journal_entries "
+        "WHERE content LIKE ? ORDER BY created_at DESC",
+        (search_query,)
+    )
+    results = [dict(r) for r in rows.fetchall()]
+    conn.close()
+    return results
+
+
+def update_user_memory(key, value, source="user"):
+    """Updates or inserts user traits, interests, or projects into memory_entries"""
+    if not key or not key.strip() or not value or not value.strip():
+        raise ValueError("Key and Value cannot be empty.")
+
+    conn = get_connection()
+    try:
+        timestamp = datetime.now().isoformat(sep=" ", timespec="seconds")
+        
+        # UPSERT syntax configured for Zoya's columns
+        conn.execute("""
+            INSERT INTO memory_entries (key, value, source, created_at) 
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(key) DO UPDATE SET 
+                value = excluded.value, 
+                updated_at = ?
+        """, (key.strip(), value.strip(), source.strip(), timestamp, timestamp))
+        
+        conn.commit()
+        return True
+    except sqlite3.Error as e:
+        print(f"Memory update error: {e}")
+        return False
+    finally:
+        conn.close()
+
+
+def get_all_memories():
+    """Retrieves all stored context pieces as a clean dictionary for the AI"""
+    conn = get_connection()
+    rows = conn.execute("SELECT key, value FROM memory_entries").fetchall()
+    conn.close()
+    return {r["key"]: r["value"] for r in rows}
+
+
 if __name__ == "__main__":
     init_db()
 
@@ -125,4 +203,13 @@ if __name__ == "__main__":
 
     print("\nDashboard snapshot:")
     print(get_dashboard_snapshot())
+
+"""zahra here, just testing"""
+
+    print("\n--- Testing Zahra's Modules ---")
+    save_journal_entry("Figured out Git streams with Zoya! Feeling productive.", mood="🚀 excited")
+    update_user_memory("interests", "Python, PyQt6, UI design")
+    
+    print("Search results for 'Git':", search_journal_entries("Git"))
+    print("All System Memories:", get_all_memories())
 
