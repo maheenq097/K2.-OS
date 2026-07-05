@@ -203,13 +203,3 @@ if __name__ == "__main__":
 
     print("\nDashboard snapshot:")
     print(get_dashboard_snapshot())
-
-"""zahra here, just testing"""
-
-    print("\n--- Testing Zahra's Modules ---")
-    save_journal_entry("Figured out Git streams with Zoya! Feeling productive.", mood="🚀 excited")
-    update_user_memory("interests", "Python, PyQt6, UI design")
-    
-    print("Search results for 'Git':", search_journal_entries("Git"))
-    print("All System Memories:", get_all_memories())
-
