@@ -1,0 +1,115 @@
+/* Reset */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* Body */
+body{
+    background:#f4f6f9;
+    color:#333;
+    line-height:1.6;
+}
+
+/* Container */
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:40px auto;
+}
+
+/* Header */
+header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+header h1{
+    font-size:40px;
+    color:#2563eb;
+}
+
+header p{
+    font-size:18px;
+    color:#666;
+    margin-top:8px;
+}
+
+/* Cards */
+.card{
+    background:#ffffff;
+    margin-bottom:25px;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h2{
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+.card h3{
+    margin-top:15px;
+    color:#444;
+}
+
+.card p{
+    margin-bottom:10px;
+}
+
+/* List */
+ul{
+    padding-left:20px;
+}
+
+li{
+    margin:8px 0;
+}
+
+/* Dark Theme */
+body.dark-theme{
+    background:#121212;
+    color:white;
+}
+
+body.dark-theme .card{
+    background:#1e1e1e;
+    color:white;
+}
+
+body.dark-theme h2{
+    color:#60a5fa;
+}
+
+body.dark-theme h3{
+    color:#dddddd;
+}
+
+body.dark-theme header p{
+    color:#cccccc;
+}
+
+/* Mobile Responsive */
+@media (max-width:768px){
+
+    .container{
+        width:95%;
+    }
+
+    header h1{
+        font-size:30px;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+}

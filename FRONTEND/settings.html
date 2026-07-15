@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K2.OS - Settings</title>
+
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>K2.OS Settings</h1>
+            <p>Customize your experience</p>
+        </header>
+
+        <div class="settings-card">
+
+            <h2>Appearance</h2>
+
+            <div class="setting-item">
+                <label for="darkMode">
+                    Enable Dark Mode
+                </label>
+
+                <input type="checkbox" id="darkMode">
+            </div>
+
+            <hr>
+            <hr>
+
+<h2>Language</h2>
+
+<div class="setting-item">
+    <label for="language">Select Language</label>
+
+    <select id="language">
+        <option value="en">English</option>
+        <option value="ur">Urdu</option>
+    </select>
+</div>
+
+<hr>
+
+<h2>Accessibility</h2>
+
+<div class="setting-item">
+    <label for="largeText">Large Text</label>
+
+    <input type="checkbox" id="largeText">
+</div>
+
+            <h2>Notifications</h2>
+
+            <div class="setting-item">
+                <label for="notifications">
+                    Enable Notifications
+                </label>
+
+                <input type="checkbox" id="notifications">
+            </div>
+
+            <hr>
+
+            <h2>Account</h2>
+
+            <div class="setting-item">
+                <label>Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter your username">
+            </div>
+
+            <div class="setting-item">
+                <label>Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email">
+            </div>
+
+            <button id="saveSettings">
+                Save Settings
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="settings.js"></script>
+
+</body>
+</html>

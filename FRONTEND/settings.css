@@ -1,0 +1,136 @@
+/* settings.css */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    color:#333;
+}
+
+.container{
+    width:100%;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+
+.settings-card{
+    width:420px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+header{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+header h1{
+    margin-bottom:5px;
+}
+
+header p{
+    color:gray;
+}
+
+h2{
+    margin:20px 0 10px;
+    font-size:20px;
+}
+
+.setting-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:15px 0;
+}
+
+.setting-item input[type="text"],
+.setting-item input[type="email"]{
+    width:180px;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+
+input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    cursor:pointer;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+/* Dark Theme */
+
+body.dark-theme{
+    background:#121212;
+    color:white;
+}
+
+body.dark-theme .settings-card{
+    background:#1e1e1e;
+}
+
+body.dark-theme input{
+    background:#2b2b2b;
+    color:white;
+    border:1px solid #555;
+}
+
+body.dark-theme header p{
+    color:#ccc;
+}
+body.dark-theme{
+    background:#121212;
+    color:white;
+}
+.large-text {
+    font-size: 18px;
+}
+
+.large-text h1,
+.large-text h2,
+.large-text p,
+.large-text label,
+.large-text button,
+.large-text input,
+.large-text select {
+    font-size: 18px;
+}
+
+select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+body.dark-theme select {
+    background: #2b2b2b;
+    color: white;
+    border: 1px solid #555;
+}
