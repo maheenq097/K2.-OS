@@ -126,3 +126,44 @@ if __name__ == "__main__":
     print("\nDashboard snapshot:")
     print(get_dashboard_snapshot())
 
+def add_memory(key, value, source="user"):
+    conn = get_connection()
+    conn.execute(
+        "INSERT OR REPLACE INTO memory_entries (key, value, source) VALUES (?, ?, ?)",
+        (key, value, source)
+    )
+    conn.commit()
+    conn.close()
+    return True
+
+def update_user_memory(key, value, source="user"):
+    conn = get_connection()
+    conn.execute(
+        "INSERT OR REPLACE INTO memory_entries (key, value, source) VALUES (?, ?, ?)",
+        (key, value, source)
+    )
+    conn.commit()
+    conn.close()
+    return True
+
+def get_all_memories():
+    conn = get_connection()
+    rows = conn.execute("SELECT key, value FROM memory_entries").fetchall()
+    conn.close()
+    return {row["key"]: row["value"] for row in rows}
+
+def get_memory(key):
+    conn = get_connection()
+    row = conn.execute(
+        "SELECT value FROM memory_entries WHERE key = ?", (key,)
+    ).fetchone()
+    conn.close()
+    return row["value"] if row else None
+
+def delete_memory(key):
+    conn = get_connection()
+    conn.execute("DELETE FROM memory_entries WHERE key = ?", (key,))
+    conn.commit()
+    conn.close()
+    return True
+
