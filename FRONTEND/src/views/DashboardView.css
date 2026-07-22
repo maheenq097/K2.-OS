@@ -1,0 +1,361 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* Summit Hero */
+.summit-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(135deg, rgba(14, 20, 32, 0.9) 0%, rgba(20, 30, 50, 0.7) 100%);
+  border: 1px solid var(--border-cyan);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--shadow-glow-cyan);
+}
+
+.hero-content {
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hero-badge {
+  align-self: flex-start;
+}
+
+.hero-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.hero-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.hero-stats-row {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.stat-pill {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem 0.85rem;
+  background: rgba(10, 15, 26, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+}
+
+.color-cyan {
+  color: var(--accent-cyan) !important;
+}
+.color-violet {
+  color: var(--accent-violet) !important;
+}
+.color-gold {
+  color: var(--accent-gold) !important;
+}
+.color-emerald {
+  color: var(--accent-emerald) !important;
+}
+
+.badge-rose {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+/* Circle Meter */
+.hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.altitude-meter-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 8;
+}
+
+.circle-fill {
+  fill: none;
+  stroke: var(--accent-cyan);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease;
+  filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.6));
+}
+
+.circle-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-pct {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+.circle-lbl {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Briefing Card */
+.briefing-card {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(14, 20, 32, 0.7) 100%);
+  border: 1px solid var(--border-violet);
+}
+
+.briefing-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.briefing-sparkle {
+  color: var(--accent-violet);
+}
+
+.briefing-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  flex: 1;
+}
+
+.briefing-body {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.metric-card {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metric-val {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-bright);
+}
+
+.metric-lbl {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.dashboard-col {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.75rem;
+}
+
+.col-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.text-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-cyan);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.text-btn:hover {
+  text-decoration: underline;
+}
+
+/* Objectives list in Dash */
+.objectives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.obj-dash-card {
+  background: rgba(10, 15, 26, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.obj-dash-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.obj-due {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.obj-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.subtasks-dash {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.st-dash-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0;
+  transition: color 0.15s ease;
+}
+
+.st-dash-item:hover {
+  color: var(--text-bright);
+}
+
+.st-dash-item.completed {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.st-check {
+  color: var(--accent-cyan);
+}
+
+/* Memory Preview */
+.memory-preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.mem-preview-card {
+  background: rgba(10, 15, 26, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mem-preview-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mem-topic {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-violet);
+}
+
+.mem-content {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
