@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K2.OS — Personal AI Operating System (Standalone)</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+/* ==========================================================================
+   K2.OS - Cupertino Apple Glassmorphism Design System (macOS Sequoia / iOS 18)
+   ========================================================================== */
+
+:root {
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  --accent: #007aff;
+  --accent-hover: #0062cc;
+  --purple: #af52de;
+  --pink: #ff2d55;
+  --amber: #ff9500;
+  --green: #34c759;
+  --danger: #ff3b30;
+  
+  --glass-bg: rgba(26, 28, 35, 0.72);
+  --glass-bg-hover: rgba(35, 38, 48, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  --glass-blur: blur(30px) saturate(180%);
+
+  --text-main: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.45);
+
+  --window-bg: rgba(22, 24, 30, 0.85);
+  --sidebar-bg: rgba(18, 20, 26, 0.65);
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Wallpapers */
+body.k2-snow {
+  background: radial-gradient(circle at 50% 20%, #1a233a 0%, #0d111a 60%, #05070a 100%),
+              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" opacity="0.06"><polygon points="400,100 200,500 600,500" fill="white"/></svg>') no-repeat center center;
+  background-size: cover;
+}
+
+body.k2-sunset {
+  background: linear-gradient(135deg, #2c1654 0%, #521c43 40%, #8c3b31 70%, #d46c3b 100%);
+}
+
+body.sequoia-lake {
+  background: radial-gradient(circle at 30% 30%, #0f3854 0%, #0a1f33 50%, #040d17 100%);
+}
+
+body.studio-light {
+  background: linear-gradient(135deg, #e0e5ec 0%, #c4d0df 50%, #aab7c7 100%);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --text-main: #1d1d1f;
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-muted: rgba(0, 0, 0, 0.4);
+  --window-bg: rgba(255, 255, 255, 0.88);
+  --sidebar-bg: rgba(240, 243, 248, 0.75);
+}
+
+body.cyber-aurora {
+  background: radial-gradient(circle at 70% 30%, #160033 0%, #001a33 50%, #000d1a 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-system);
+  color: var(--text-main);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Top Menu Bar */
+.top-menu-bar {
+  height: 32px;
+  width: 100%;
+  background: rgba(18, 20, 26, 0.55);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 10000;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.menu-bar-left, .menu-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.apple-logo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+.apple-logo-btn:hover { background: rgba(255, 255, 255, 0.15); }
+.app-title-active { font-weight: 700; letter-spacing: -0.01em; }
+.menu-item { color: var(--text-secondary); cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: all var(--transition-fast); }
+.menu-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.12); }
+.status-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 4px; border-radius: 4px; transition: background var(--transition-fast); }
+.status-btn:hover { background: rgba(255, 255, 255, 0.15); }
+.status-clock { font-weight: 600; font-size: 12.5px; letter-spacing: -0.01em; }
+
+/* Glass Dropdowns */
+.glass-dropdown {
+  position: fixed;
+  top: 36px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+  z-index: 10001;
+  padding: 6px;
+  width: 220px;
+}
+#apple-dropdown-menu { left: 8px; }
+.dropdown-item { padding: 8px 12px; border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; transition: background var(--transition-fast); }
+.dropdown-item:hover { background: var(--accent); color: #fff; }
+.dropdown-divider { height: 1px; background: var(--glass-border); margin: 4px 0; }
+
+/* Control Center */
+.cc-panel { right: 12px; width: 280px; padding: 14px; }
+.cc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.cc-tile { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 11.5px; }
+.cc-tile.active { background: var(--accent); color: #fff; }
+.cc-tile strong { display: block; font-size: 12.5px; }
+.cc-slider-group { margin-top: 10px; font-size: 11px; color: var(--text-secondary); }
+.cc-range { width: 100%; margin-top: 4px; accent-color: var(--accent); }
+
+/* Spotlight Overlay */
+.spotlight-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 10002;
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+}
+.spotlight-modal { width: 600px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); overflow: hidden; }
+.spotlight-input-wrapper { display: flex; align-items: center; padding: 16px 20px; gap: 12px; border-bottom: 1px solid var(--glass-border); }
+.spotlight-input-wrapper input { flex: 1; background: transparent; border: none; outline: none; color: var(--text-main); font-size: 18px; font-family: var(--font-system); }
+.spotlight-kbd { font-size: 10px; font-family: var(--font-mono); background: rgba(255, 255, 255, 0.15); padding: 3px 6px; border-radius: 4px; }
+.spotlight-results { max-height: 350px; overflow-y: auto; padding: 10px; }
+.sl-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: background var(--transition-fast); }
+.sl-item:hover { background: var(--accent); color: #fff; }
+
+/* Desktop & Window Manager */
+.desktop-viewport { position: absolute; top: 32px; bottom: 80px; left: 0; right: 0; }
+#window-layer { position: relative; width: 100%; height: 100%; }
+.mac-window { position: absolute; background: var(--window-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); display: flex; flex-direction: column; overflow: hidden; min-width: 480px; min-height: 320px; transition: box-shadow var(--transition-fast); }
+.mac-window.active-window { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.2); }
+.window-header { height: 42px; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; cursor: move; }
+.window-controls { display: flex; align-items: center; gap: 8px; }
+.traffic-light { width: 12px; height: 12px; border-radius: 50%; display: inline-block; cursor: pointer; }
+.tl-red { background: #ff5f56; border: 0.5px solid #e0443e; }
+.tl-yellow { background: #ffbd2e; border: 0.5px solid #dea123; }
+.tl-green { background: #27c93f; border: 0.5px solid #1aab29; }
+.window-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.window-body { flex: 1; overflow: auto; position: relative; }
+
+/* Magnified Apple Dock */
+.dock-wrapper { position: fixed; bottom: 14px; left: 0; right: 0; display: flex; justify-content: center; z-index: 9999; }
+.glass-dock { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 24px; padding: 8px 12px; display: flex; align-items: flex-end; gap: 10px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); }
+.dock-item { position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform var(--transition-spring); }
+.dock-item:hover { transform: translateY(-8px) scale(1.18); }
+.dock-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); color: #fff; }
+
+.icon-bg-mc { background: linear-gradient(135deg, #5e5ce6 0%, #3634a3 100%); }
+.icon-bg-journal { background: linear-gradient(135deg, #ff9f0a 0%, #c96e00 100%); }
+.icon-bg-objectives { background: linear-gradient(135deg, #30d158 0%, #1b8a36 100%); }
+.icon-bg-ai { background: linear-gradient(135deg, #bf5af2 0%, #7d26a8 100%); }
+.icon-bg-memory { background: linear-gradient(135deg, #0a84ff 0%, #004fb0 100%); }
+.icon-bg-settings { background: linear-gradient(135deg, #8e8e93 0%, #48484a 100%); }
+
+.dock-dot { width: 4px; height: 4px; border-radius: 50%; background: transparent; margin-top: 4px; }
+.dock-dot.active { background: var(--text-main); box-shadow: 0 0 6px rgba(255, 255, 255, 0.8); }
+.dock-divider { width: 1px; height: 36px; background: var(--glass-border); margin: 0 4px; align-self: center; }
+
+/* Buttons & Components */
+.btn { font-family: var(--font-system); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: var(--radius-sm); border: none; outline: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all var(--transition-fast); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: rgba(255, 255, 255, 0.12); color: var(--text-main); border: 1px solid var(--glass-border); }
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-text { background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 12.5px; font-weight: 500; }
+.btn-text:hover { text-decoration: underline; }
+.btn-danger-icon { background: rgba(255, 59, 48, 0.15); color: var(--danger); border: 1px solid rgba(255, 59, 48, 0.3); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.btn-danger-icon:hover { background: var(--danger); color: #fff; }
+
+.badge { font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-full); text-transform: uppercase; }
+.badge-primary { background: rgba(0, 122, 255, 0.2); color: #64b5f6; }
+.badge-secondary { background: rgba(255, 255, 255, 0.12); color: var(--text-secondary); }
+.badge-danger { background: rgba(255, 59, 48, 0.2); color: #ff8a80; }
+.badge-warning { background: rgba(255, 149, 0, 0.2); color: #ffd54f; }
+.badge-success { background: rgba(52, 199, 89, 0.2); color: #81c784; }
+
+.form-input, .form-select { font-family: var(--font-system); font-size: 13px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-main); outline: none; }
+.form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3); }
+
+/* Mission Control */
+.mission-control { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.mc-hero-banner { background: linear-gradient(135deg, rgba(94, 92, 230, 0.3) 0%, rgba(10, 132, 255, 0.15) 100%); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 24px; display: flex; justify-content: space-between; align-items: center; }
+.mc-badge { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.05em; margin-bottom: 6px; }
+.mc-title { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.mc-subtitle { color: var(--text-secondary); font-size: 13.5px; }
+.mc-hero-actions { display: flex; gap: 10px; }
+.mc-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.stat-card { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: center; gap: 14px; }
+.stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.icon-purple { background: rgba(175, 82, 222, 0.2); color: var(--purple); }
+.icon-blue { background: rgba(0, 122, 255, 0.2); color: var(--accent); }
+.icon-green { background: rgba(52, 199, 89, 0.2); color: var(--green); }
+.icon-amber { background: rgba(255, 149, 0, 0.2); color: var(--amber); }
+.stat-value { font-size: 22px; font-weight: 700; display: block; }
+.stat-label { font-size: 12px; color: var(--text-secondary); }
+.mc-grid-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mc-panel { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 18px; }
+.mc-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.mc-task-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.mc-task-left { display: flex; align-items: center; gap: 10px; }
+.priority-dot { width: 8px; height: 8px; border-radius: 50%; }
+.priority-high { background: var(--danger); }
+.priority-medium { background: var(--amber); }
+.priority-low { background: var(--green); }
+.mc-task-title { font-size: 13.5px; font-weight: 500; display: block; }
+.mc-task-meta { font-size: 11.5px; color: var(--text-muted); }
+.mc-journal-card { background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px; }
+.mc-j-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.mc-j-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.mc-j-snippet { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+.memory-chip { background: rgba(0, 122, 255, 0.15); border: 1px solid rgba(0, 122, 255, 0.3); color: #90caf9; padding: 4px 10px; border-radius: var(--radius-full); font-size: 12px; display: inline-block; margin: 3px; }
+.chip-project { background: rgba(175, 82, 222, 0.15); border-color: rgba(175, 82, 222, 0.3); color: #e1bee7; }
+
+/* Neural Journal */
+.journal-app { display: flex; height: 100%; }
+.journal-sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--glass-border); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.journal-filter-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.j-tag-chip { font-size: 11px; padding: 3px 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); cursor: pointer; }
+.j-tag-chip.active { background: var(--accent); color: #fff; }
+.journal-entry-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.journal-item { padding: 12px; border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.03); cursor: pointer; border: 1px solid transparent; }
+.journal-item.active { background: rgba(0, 122, 255, 0.15); border-color: var(--accent); }
+.ji-title { font-size: 13.5px; font-weight: 600; display: block; }
+.ji-snippet { font-size: 11.5px; color: var(--text-secondary); margin: 4px 0; }
+.ji-date { font-size: 10px; color: var(--text-muted); }
+.journal-editor { flex: 1; display: flex; flex-direction: column; padding: 20px; }
+.editor-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.editor-title-input { font-size: 20px; font-weight: 700; background: transparent; border: none; outline: none; color: var(--text-main); width: 60%; }
+.editor-actions { display: flex; gap: 8px; align-items: center; }
+.editor-textarea { flex: 1; background: transparent; border: none; outline: none; color: var(--text-main); font-size: 15px; line-height: 1.6; font-family: var(--font-system); resize: none; }
+.ai-insight-panel { background: rgba(175, 82, 222, 0.15); border: 1px solid rgba(175, 82, 222, 0.4); border-radius: var(--radius-md); padding: 14px; margin-top: 14px; }
+.ai-insight-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--purple); margin-bottom: 8px; }
+
+/* Objectives */
+.objectives-app { padding: 24px; display: flex; flex-direction: column; height: 100%; gap: 16px; }
+.obj-header { display: flex; justify-content: space-between; align-items: center; }
+.obj-controls-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.04); padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid var(--glass-border); }
+.obj-tabs { display: flex; gap: 8px; }
+.tab-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; }
+.tab-btn.active { background: rgba(255, 255, 255, 0.15); color: var(--text-main); }
+.add-task-card { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 10px; }
+.form-row { display: flex; gap: 10px; align-items: center; }
+.obj-task-table { display: flex; flex-direction: column; gap: 8px; }
+.obj-row { display: flex; align-items: center; gap: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 12px 16px; transition: background var(--transition-fast); }
+.obj-row.is-completed { opacity: 0.55; text-decoration: line-through; }
+.obj-row-body { flex: 1; }
+.obj-row-title { font-size: 14px; font-weight: 500; display: block; }
+.obj-row-meta { font-size: 11.5px; color: var(--text-muted); }
+
+.custom-checkbox { display: block; position: relative; padding-left: 22px; cursor: pointer; user-select: none; }
+.custom-checkbox input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.checkmark { position: absolute; top: 0; left: 0; height: 18px; width: 18px; background-color: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 4px; }
+.custom-checkbox input:checked ~ .checkmark { background-color: var(--accent); border-color: var(--accent); }
+.checkmark:after { content: ""; position: absolute; display: none; }
+.custom-checkbox input:checked ~ .checkmark:after { display: block; left: 6px; top: 2px; width: 4px; height: 9px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* AI Assistant Chat */
+.ai-assistant-app { display: flex; flex-direction: column; height: 100%; padding: 18px; gap: 12px; }
+.ai-memory-badge { background: rgba(0, 122, 255, 0.12); border: 1px solid rgba(0, 122, 255, 0.3); border-radius: var(--radius-md); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; }
+.amb-left { display: flex; align-items: center; gap: 8px; }
+.chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px; }
+.chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+.user-bubble { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+.ai-bubble { align-self: flex-start; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); border-bottom-left-radius: 4px; }
+.cb-header { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.7; margin-bottom: 4px; }
+.quick-prompts-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.qp-chip { font-size: 11.5px; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); padding: 6px 12px; border-radius: var(--radius-full); cursor: pointer; white-space: nowrap; }
+.qp-chip:hover { background: rgba(255, 255, 255, 0.18); }
+.chat-input-row { display: flex; gap: 10px; }
+.chat-input-row input { flex: 1; }
+
+/* Memory Core */
+.memory-core-app { display: flex; height: 100%; }
+.mc-sidebar { width: 220px; background: var(--sidebar-bg); border-right: 1px solid var(--glass-border); padding: 16px; }
+.mc-sb-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; margin-bottom: 20px; color: var(--accent); }
+.mc-nav-list { display: flex; flex-direction: column; gap: 6px; }
+.mc-nav-item { display: flex; align-items: center; gap: 10px; background: transparent; border: none; color: var(--text-secondary); padding: 10px; border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; text-align: left; }
+.mc-nav-item.active, .mc-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-main); }
+.mc-content { flex: 1; padding: 24px; overflow-y: auto; }
+.mc-section h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.mc-section p { font-size: 13px; color: var(--text-secondary); }
+.form-group { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.memory-chip-large { background: rgba(0, 122, 255, 0.15); border: 1px solid rgba(0, 122, 255, 0.3); color: #90caf9; padding: 6px 14px; border-radius: var(--radius-full); font-size: 13px; display: inline-flex; align-items: center; gap: 8px; margin: 4px; }
+.btn-chip-remove { background: transparent; border: none; color: #ff8a80; cursor: pointer; font-size: 16px; }
+.projects-list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.project-card-item { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px; }
+.pci-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.pci-goal { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
+.code-preview-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 16px; font-family: var(--font-mono); font-size: 12.5px; color: #a5d6a7; overflow-x: auto; margin-top: 14px; }
+
+/* System Settings */
+.settings-app { display: flex; height: 100%; }
+.settings-sidebar { width: 220px; background: var(--sidebar-bg); border-right: 1px solid var(--glass-border); padding: 16px; }
+.ss-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; margin-bottom: 20px; }
+.ss-item { padding: 10px; border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; }
+.ss-item.active { background: var(--accent); color: #fff; }
+.settings-content { flex: 1; padding: 24px; overflow-y: auto; }
+.wallpaper-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.wp-card { background: rgba(255, 255, 255, 0.04); border: 2px solid transparent; border-radius: var(--radius-md); padding: 10px; cursor: pointer; text-align: center; font-size: 12px; }
+.wp-card.active { border-color: var(--accent); }
+.wp-preview { height: 75px; border-radius: 8px; margin-bottom: 8px; }
+.wp-k2-snow { background: radial-gradient(circle, #1a233a, #05070a); }
+.wp-k2-sunset { background: linear-gradient(135deg, #2c1654, #d46c3b); }
+.wp-sequoia-lake { background: radial-gradient(circle, #0f3854, #040d17); }
+.wp-studio-light { background: linear-gradient(135deg, #e0e5ec, #aab7c7); }
+.wp-cyber-aurora { background: radial-gradient(circle, #160033, #000d1a); }
+.setting-toggle-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.04); padding: 12px 16px; border-radius: var(--radius-md); margin-top: 10px; }
+
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.2); transition: .3s; border-radius: 24px; }
+.toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+input:checked + .toggle-slider { background-color: var(--green); }
+input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+.hidden { display: none !important; }
+.empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 13px; }
+
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+  .mc-stats-grid { grid-template-columns: 1fr 1fr; }
+  .mc-grid-two-col { grid-template-columns: 1fr; }
+  .projects-list-grid { grid-template-columns: 1fr; }
+  .wallpaper-grid { grid-template-columns: 1fr 1fr; }
+}
+  </style>
+</head>
+<body class="k2-snow">
+
+  <!-- Top Apple macOS Menu Bar -->
+  <header class="top-menu-bar">
+    <div class="menu-bar-left">
+      <div class="apple-logo-btn" id="menu-apple-btn" title="K2 System Menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="app-title-active" id="active-app-name">Mission Control</span>
+      <span class="menu-item hide-mobile">File</span>
+      <span class="menu-item hide-mobile">Edit</span>
+      <span class="menu-item hide-mobile">View</span>
+      <span class="menu-item hide-mobile">Window</span>
+      <span class="menu-item hide-mobile">Help</span>
+    </div>
+
+    <div class="menu-bar-right">
+      <div class="status-btn" id="btn-spotlight" title="Spotlight Search (Cmd+K)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      
+      <div class="status-btn hide-mobile" id="status-wifi" title="Wi-Fi Connected">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      </div>
+
+      <div class="status-btn hide-mobile" id="status-battery" title="Battery 100% (Charged)">
+        <svg width="18" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg>
+      </div>
+
+      <div class="status-btn" id="btn-control-center" title="Control Center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg>
+      </div>
+
+      <div class="status-clock" id="top-bar-clock">00:00 AM</div>
+    </div>
+  </header>
+
+  <!-- Dropdowns -->
+  <div id="apple-dropdown-menu" class="glass-dropdown hidden">
+    <div class="dropdown-item" id="dd-about">About K2.OS</div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item" id="dd-settings">System Settings...</div>
+    <div class="dropdown-item" id="dd-memory">Memory Core Status</div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item" id="dd-reload">Reload Basecamp</div>
+  </div>
+
+  <div id="control-center-panel" class="glass-dropdown cc-panel hidden">
+    <div class="cc-grid">
+      <div class="cc-tile active" id="cc-tile-wifi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <div>
+          <strong>Wi-Fi</strong>
+          <span>K2-Basecamp 5G</span>
+        </div>
+      </div>
+
+      <div class="cc-tile active" id="cc-tile-bt">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>
+        <div>
+          <strong>Bluetooth</strong>
+          <span>AirPods Pro</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cc-slider-group">
+      <label>Display Brightness</label>
+      <input type="range" min="30" max="100" value="100" class="cc-range">
+    </div>
+
+    <div class="cc-slider-group">
+      <label>Sound Volume</label>
+      <input type="range" min="0" max="100" value="60" class="cc-range">
+    </div>
+  </div>
+
+  <!-- Spotlight -->
+  <div id="spotlight-overlay" class="spotlight-backdrop hidden">
+    <div class="spotlight-modal">
+      <div class="spotlight-input-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="spotlight-input" placeholder="Spotlight Search (Search tasks, journals, apps, memory)..." autocomplete="off">
+        <span class="spotlight-kbd">ESC</span>
+      </div>
+      <div class="spotlight-results" id="spotlight-results-box"></div>
+    </div>
+  </div>
+
+  <!-- Desktop -->
+  <main class="desktop-viewport">
+    <div id="window-layer"></div>
+  </main>
+
+  <!-- Magnified Dock -->
+  <div class="dock-wrapper">
+    <div class="glass-dock" id="mac-dock">
+      <div class="dock-item" data-app="missionControl" title="Mission Control Dashboard">
+        <div class="dock-icon icon-bg-mc">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <span class="dock-dot active"></span>
+      </div>
+
+      <div class="dock-item" data-app="neuralJournal" title="Neural Journal">
+        <div class="dock-icon icon-bg-journal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+
+      <div class="dock-item" data-app="objectives" title="Objectives & Tasks">
+        <div class="dock-icon icon-bg-objectives">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+
+      <div class="dock-item" data-app="aiAssistant" title="AI Assistant">
+        <div class="dock-icon icon-bg-ai">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+
+      <div class="dock-item" data-app="memoryCore" title="Memory Core">
+        <div class="dock-icon icon-bg-memory">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+
+      <div class="dock-divider"></div>
+
+      <div class="dock-item" data-app="systemSettings" title="System Settings">
+        <div class="dock-icon icon-bg-settings">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <span class="dock-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ==========================================================================
+     K2.OS Complete Self-Contained JavaScript Engine
+     ========================================================================== */
+
+  // Local Storage Data Management
+  const STORAGE_KEYS = {
+    PROFILE: 'k2os_profile',
+    INTERESTS: 'k2os_interests',
+    PROJECTS: 'k2os_projects',
+    TASKS: 'k2os_tasks',
+    JOURNAL: 'k2os_journal',
+    SETTINGS: 'k2os_settings',
+    CHAT_HISTORY: 'k2os_chat_history'
+  };
+
+  const DEFAULT_PROFILE = { name: 'Alex Vance', role: 'Founder & Software Engineer', motto: 'Build. Learn. Lead.', mountainGoal: 'Conquer K2 - Launching K2.OS Personal Operating System' };
+  const DEFAULT_INTERESTS = ['Artificial Intelligence & LLMs', 'System Architecture', 'Human-Computer Interaction', 'High-Altitude Expedition Philosophy', 'Productivity Engineering'];
+  const DEFAULT_PROJECTS = [
+    { id: 'proj-1', title: 'K2.OS Version 1 Proof of Concept', status: 'In Progress', goal: 'Establish personal AI operating system foundation by end of Summer 2026' },
+    { id: 'proj-2', title: 'Neural Memory Core Integration', status: 'Active', goal: 'Inject persistent user context into AI chat' }
+  ];
+  const DEFAULT_TASKS = [
+    { id: 'task-1', title: 'Test K2.OS Neural Journal & AI Assistant', priority: 'High', category: 'Project', status: 'Pending', dueDate: '2026-08-15' },
+    { id: 'task-2', title: 'Refine Memory Core profile & interest tags', priority: 'Medium', category: 'Personal', status: 'Pending', dueDate: '2026-08-18' },
+    { id: 'task-3', title: 'Verify GitHub repository synchronization', priority: 'High', category: 'Project', status: 'Completed', dueDate: '2026-08-09' }
+  ];
+  const DEFAULT_JOURNALS = [
+    {
+      id: 'j-1', title: 'The Philosophy Behind K2.OS', tag: 'Reflection', date: '2026-08-09 14:30',
+      content: `Unlike Everest, K2 is known for being difficult, demanding, and unforgiving. Success requires preparation, discipline, teamwork, adaptability, and resilience.\n\nEveryone is climbing their own mountain. K2.OS is intended to act as a personal basecamp, navigation system, and command center for that journey.`
+    }
+  ];
+  const DEFAULT_SETTINGS = { theme: 'dark', wallpaper: 'k2-snow', soundEnabled: true, volume: 0.6 };
+
+  function getItem(k, d) { try { const i = localStorage.getItem(k); return i ? JSON.parse(i) : d; } catch(e) { return d; } }
+  function setItem(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+
+  function getProfile() { return getItem(STORAGE_KEYS.PROFILE, DEFAULT_PROFILE); }
+  function saveProfile(p) { setItem(STORAGE_KEYS.PROFILE, p); }
+  function getInterests() { return getItem(STORAGE_KEYS.INTERESTS, DEFAULT_INTERESTS); }
+  function saveInterests(i) { setItem(STORAGE_KEYS.INTERESTS, i); }
+  function getProjects() { return getItem(STORAGE_KEYS.PROJECTS, DEFAULT_PROJECTS); }
+  function saveProjects(p) { setItem(STORAGE_KEYS.PROJECTS, p); }
+  function getTasks() { return getItem(STORAGE_KEYS.TASKS, DEFAULT_TASKS); }
+  function saveTasks(t) { setItem(STORAGE_KEYS.TASKS, t); }
+  function getJournals() { return getItem(STORAGE_KEYS.JOURNAL, DEFAULT_JOURNALS); }
+  function saveJournals(j) { setItem(STORAGE_KEYS.JOURNAL, j); }
+  function getSettings() { return getItem(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS); }
+  function saveSettings(s) { setItem(STORAGE_KEYS.SETTINGS, s); }
+  function getChatHistory() { return getItem(STORAGE_KEYS.CHAT_HISTORY, [{ sender: 'ai', text: 'Welcome to K2.OS Version 1 — Built for the Ascent. I am your integrated AI Assistant. How can I assist you today?', time: '12:00 PM' }]); }
+  function saveChatHistory(h) { setItem(STORAGE_KEYS.CHAT_HISTORY, h); }
+
+  function escapeHtml(s) { return s ? String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ''; }
+
+  // Sound Synthesizer
+  let audioCtx = null;
+  function playSound(type) {
+    const s = getSettings();
+    if (!s.soundEnabled) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const gain = audioCtx.createGain();
+      gain.gain.value = s.volume || 0.5;
+      gain.connect(audioCtx.destination);
+
+      if (type === 'click') {
+        const osc = audioCtx.createOscillator(); osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.04);
+      } else if (type === 'complete') {
+        const o1 = audioCtx.createOscillator(), o2 = audioCtx.createOscillator();
+        o1.frequency.setValueAtTime(523.25, now); o2.frequency.setValueAtTime(659.25, now + 0.08);
+        o1.connect(gain); o2.connect(gain);
+        o1.start(now); o1.stop(now + 0.2); o2.start(now + 0.08); o2.stop(now + 0.35);
+      } else if (type === 'open') {
+        const osc = audioCtx.createOscillator(); osc.frequency.setValueAtTime(440, now); osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.08);
+      } else if (type === 'trash') {
+        const osc = audioCtx.createOscillator(); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(250, now); osc.frequency.exponentialRampToValueAtTime(80, now + 0.1);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.1);
+      }
+    } catch(e) {}
+  }
+
+  // App Renderers
+  function renderMissionControl(c, openApp) {
+    const p = getProfile(), t = getTasks(), j = getJournals(), proj = getProjects();
+    const pending = t.filter(x => x.status === 'Pending'), completed = t.filter(x => x.status === 'Completed');
+    c.innerHTML = `
+      <div class="mission-control">
+        <div class="mc-hero-banner">
+          <div>
+            <div class="mc-badge">K2.OS VERSION 1.0 &bull; BUILT FOR THE ASCENT</div>
+            <h1 class="mc-title">Welcome back, ${escapeHtml(p.name)}</h1>
+            <p class="mc-subtitle">"${escapeHtml(p.motto)}" &mdash; Mountain Goal: <strong>${escapeHtml(p.mountainGoal)}</strong></p>
+          </div>
+          <div class="mc-hero-actions">
+            <button class="btn btn-primary" id="btn-mc-new-j">New Journal</button>
+            <button class="btn btn-secondary" id="btn-mc-open-ai">Ask AI Assistant</button>
+          </div>
+        </div>
+        <div class="mc-stats-grid">
+          <div class="stat-card"><div class="stat-icon icon-purple">🎯</div><div><span class="stat-value">${pending.length}</span><span class="stat-label">Pending Objectives</span></div></div>
+          <div class="stat-card"><div class="stat-icon icon-blue">🧠</div><div><span class="stat-value">${j.length}</span><span class="stat-label">Reflections</span></div></div>
+          <div class="stat-card"><div class="stat-icon icon-green">✅</div><div><span class="stat-value">${completed.length}</span><span class="stat-label">Completed Goals</span></div></div>
+          <div class="stat-card"><div class="stat-icon icon-amber">🚀</div><div><span class="stat-value">${proj.length}</span><span class="stat-label">Active Projects</span></div></div>
+        </div>
+        <div class="mc-grid-two-col">
+          <div class="mc-panel">
+            <div class="mc-panel-header"><h3>Current Priorities</h3><button class="btn-text" id="btn-mc-tasks">All Tasks &rarr;</button></div>
+            ${pending.map(x => `<div class="mc-task-item"><div class="mc-task-left"><span class="priority-dot priority-${x.priority.toLowerCase()}"></span><span>${escapeHtml(x.title)}</span></div><span class="badge badge-${x.priority==='High'?'danger':'secondary'}">${x.priority}</span></div>`).join('')}
+          </div>
+          <div class="mc-panel">
+            <div class="mc-panel-header"><h3>Recent Reflections</h3><button class="btn-text" id="btn-mc-journal">Open Journal &rarr;</button></div>
+            ${j.slice(0,2).map(x => `<div class="mc-journal-card"><strong>${escapeHtml(x.title)}</strong><p>${escapeHtml(x.content.substring(0,80))}...</p></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+    c.querySelector('#btn-mc-new-j')?.addEventListener('click', () => openApp('neuralJournal'));
+    c.querySelector('#btn-mc-open-ai')?.addEventListener('click', () => openApp('aiAssistant'));
+    c.querySelector('#btn-mc-tasks')?.addEventListener('click', () => openApp('objectives'));
+    c.querySelector('#btn-mc-journal')?.addEventListener('click', () => openApp('neuralJournal'));
+  }
+
+  function renderNeuralJournal(c) {
+    let jList = getJournals(), selId = jList[0]?.id;
+    function draw() {
+      const active = jList.find(x => x.id === selId) || { title: '', tag: 'Reflection', content: '' };
+      c.innerHTML = `
+        <div class="journal-app">
+          <div class="journal-sidebar">
+            <button class="btn btn-primary btn-sm" id="j-new" style="width:100%;">+ New Reflection</button>
+            <div class="journal-entry-list">
+              ${jList.map(x => `<div class="journal-item ${x.id===selId?'active':''}" data-id="${x.id}"><strong>${escapeHtml(x.title)}</strong><br><small>${x.date}</small></div>`).join('')}
+            </div>
+          </div>
+          <div class="journal-editor">
+            <div class="editor-toolbar">
+              <input type="text" id="j-title" class="editor-title-input" value="${escapeHtml(active.title)}" placeholder="Title...">
+              <button class="btn btn-primary btn-sm" id="j-save">Save</button>
+            </div>
+            <textarea id="j-content" class="editor-textarea" placeholder="Capture thoughts...">${escapeHtml(active.content)}</textarea>
+          </div>
+        </div>
+      `;
+      c.querySelectorAll('.journal-item').forEach(el => el.addEventListener('click', () => { selId = el.dataset.id; draw(); }));
+      c.querySelector('#j-new')?.addEventListener('click', () => {
+        const item = { id: 'j-'+Date.now(), title: 'New Reflection', tag: 'Reflection', date: new Date().toLocaleString(), content: '' };
+        jList.unshift(item); selId = item.id; saveJournals(jList); playSound('open'); draw();
+      });
+      c.querySelector('#j-save')?.addEventListener('click', () => {
+        const cur = jList.find(x => x.id === selId);
+        if (cur) { cur.title = c.querySelector('#j-title').value; cur.content = c.querySelector('#j-content').value; saveJournals(jList); playSound('click'); draw(); }
+      });
+    }
+    draw();
+  }
+
+  function renderObjectives(c) {
+    let tList = getTasks();
+    function draw() {
+      c.innerHTML = `
+        <div class="objectives-app">
+          <div class="obj-header">
+            <h2>K2 Objectives & Tasks</h2>
+            <button class="btn btn-primary" id="btn-add-t">+ Add Objective</button>
+          </div>
+          <div id="add-t-form" class="add-task-card hidden">
+            <input type="text" id="t-input" class="form-input" placeholder="Task title..." style="width:70%;">
+            <button class="btn btn-primary btn-sm" id="t-save">Save</button>
+          </div>
+          <div class="obj-task-table">
+            ${tList.map(x => `
+              <div class="obj-row ${x.status==='Completed'?'is-completed':''}">
+                <label class="custom-checkbox"><input type="checkbox" class="t-chk" data-id="${x.id}" ${x.status==='Completed'?'checked':''}><span class="checkmark"></span></label>
+                <div class="obj-row-body"><span class="obj-row-title">${escapeHtml(x.title)}</span></div>
+                <span class="badge badge-${x.priority==='High'?'danger':'secondary'}">${x.priority}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      c.querySelector('#btn-add-t')?.addEventListener('click', () => c.querySelector('#add-t-form').classList.toggle('hidden'));
+      c.querySelector('#t-save')?.addEventListener('click', () => {
+        const val = c.querySelector('#t-input').value.trim();
+        if (val) { tList.unshift({ id: 't-'+Date.now(), title: val, priority: 'Medium', status: 'Pending' }); saveTasks(tList); playSound('open'); draw(); }
+      });
+      c.querySelectorAll('.t-chk').forEach(chk => chk.addEventListener('change', () => {
+        const item = tList.find(x => x.id === chk.dataset.id);
+        if (item) { item.status = chk.checked ? 'Completed' : 'Pending'; saveTasks(tList); if (chk.checked) playSound('complete'); draw(); }
+      }));
+    }
+    draw();
+  }
+
+  function renderAiAssistant(c) {
+    let chat = getChatHistory(), p = getProfile();
+    function draw() {
+      c.innerHTML = `
+        <div class="ai-assistant-app">
+          <div class="ai-memory-badge"><strong>Memory Core Active:</strong> Context injected for ${escapeHtml(p.name)}</div>
+          <div class="chat-messages" id="chat-box">
+            ${chat.map(m => `<div class="chat-bubble ${m.sender==='user'?'user-bubble':'ai-bubble'}"><strong>${m.sender==='user'?escapeHtml(p.name):'K2 AI'}</strong>: ${m.text}</div>`).join('')}
+          </div>
+          <div class="chat-input-row">
+            <input type="text" id="ai-input" class="form-input" placeholder="Ask AI Assistant...">
+            <button class="btn btn-primary" id="ai-send">Send</button>
+          </div>
+        </div>
+      `;
+      const box = c.querySelector('#chat-box'); if (box) box.scrollTop = box.scrollHeight;
+      const send = () => {
+        const inp = c.querySelector('#ai-input'), text = inp.value.trim(); if (!text) return;
+        chat.push({ sender: 'user', text: escapeHtml(text) }); saveChatHistory(chat); playSound('click'); draw();
+        setTimeout(() => {
+          chat.push({ sender: 'ai', text: `Processed with Memory Core context for <strong>${escapeHtml(p.name)}</strong>: Alignment verified for goal "${escapeHtml(p.mountainGoal)}".` });
+          saveChatHistory(chat); playSound('open'); draw();
+        }, 500);
+      };
+      c.querySelector('#ai-send')?.addEventListener('click', send);
+      c.querySelector('#ai-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+    }
+    draw();
+  }
+
+  function renderMemoryCore(c) {
+    let p = getProfile();
+    c.innerHTML = `
+      <div class="memory-core-app">
+        <div class="mc-content">
+          <h2>Memory Core & Profile</h2>
+          <div class="form-group"><label>Name:</label><input type="text" id="m-name" class="form-input" value="${escapeHtml(p.name)}"></div>
+          <div class="form-group"><label>Motto:</label><input type="text" id="m-motto" class="form-input" value="${escapeHtml(p.motto)}"></div>
+          <div class="form-group"><label>Mountain Goal:</label><input type="text" id="m-goal" class="form-input" value="${escapeHtml(p.mountainGoal)}"></div>
+          <button class="btn btn-primary" id="m-save">Save Memory Core</button>
+        </div>
+      </div>
+    `;
+    c.querySelector('#m-save')?.addEventListener('click', () => {
+      p.name = c.querySelector('#m-name').value;
+      p.motto = c.querySelector('#m-motto').value;
+      p.mountainGoal = c.querySelector('#m-goal').value;
+      saveProfile(p); playSound('click'); alert('Saved to Memory Core!');
+    });
+  }
+
+  function renderSystemSettings(c) {
+    let s = getSettings();
+    c.innerHTML = `
+      <div class="settings-app">
+        <div class="settings-content">
+          <h2>Wallpapers & Appearance</h2>
+          <div class="wallpaper-grid" style="margin-top:15px;">
+            <div class="wp-card" data-wp="k2-snow"><div class="wp-preview wp-k2-snow"></div>K2 Snow</div>
+            <div class="wp-card" data-wp="k2-sunset"><div class="wp-preview wp-k2-sunset"></div>K2 Sunset</div>
+            <div class="wp-card" data-wp="sequoia-lake"><div class="wp-preview wp-sequoia-lake"></div>Sequoia Lake</div>
+            <div class="wp-card" data-wp="studio-light"><div class="wp-preview wp-studio-light"></div>Studio Light</div>
+            <div class="wp-card" data-wp="cyber-aurora"><div class="wp-preview wp-cyber-aurora"></div>Cyber Aurora</div>
+          </div>
+        </div>
+      </div>
+    `;
+    c.querySelectorAll('.wp-card').forEach(card => card.addEventListener('click', () => {
+      s.wallpaper = card.dataset.wp; saveSettings(s); document.body.className = s.wallpaper; playSound('open');
+    }));
+  }
+
+  const APPS = {
+    missionControl: { title: 'Mission Control', render: renderMissionControl },
+    neuralJournal: { title: 'Neural Journal', render: renderNeuralJournal },
+    objectives: { title: 'Objectives', render: renderObjectives },
+    aiAssistant: { title: 'AI Assistant', render: renderAiAssistant },
+    memoryCore: { title: 'Memory Core', render: renderMemoryCore },
+    systemSettings: { title: 'System Settings', render: renderSystemSettings }
+  };
+
+  // Window Manager Class
+  class WindowManager {
+    constructor() {
+      this.layer = document.getElementById('window-layer');
+      this.openWindows = new Map();
+      this.topZ = 100;
+      this.initTopBar();
+      this.initDock();
+      this.openApp('missionControl');
+    }
+
+    initTopBar() {
+      const clock = document.getElementById('top-bar-clock');
+      setInterval(() => { if (clock) clock.innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }, 1000);
+      document.getElementById('menu-apple-btn')?.addEventListener('click', e => { e.stopPropagation(); document.getElementById('apple-dropdown-menu')?.classList.toggle('hidden'); });
+      document.getElementById('btn-control-center')?.addEventListener('click', e => { e.stopPropagation(); document.getElementById('control-center-panel')?.classList.toggle('hidden'); });
+      document.addEventListener('click', () => {
+        document.getElementById('apple-dropdown-menu')?.classList.add('hidden');
+        document.getElementById('control-center-panel')?.classList.add('hidden');
+      });
+    }
+
+    initDock() {
+      document.querySelectorAll('.dock-item').forEach(item => item.addEventListener('click', () => this.openApp(item.dataset.app)));
+    }
+
+    openApp(id) {
+      const app = APPS[id]; if (!app) return;
+      if (this.openWindows.has(id)) {
+        const win = this.openWindows.get(id); win.style.display = 'flex'; this.focus(id); return;
+      }
+      playSound('open');
+      const win = document.createElement('div');
+      win.className = 'mac-window active-window';
+      win.style.width = '840px'; win.style.height = '540px';
+      win.style.top = `${60 + (this.openWindows.size * 20)}px`;
+      win.style.left = `${60 + (this.openWindows.size * 25)}px`;
+      win.innerHTML = `
+        <div class="window-header">
+          <div class="window-controls">
+            <span class="traffic-light tl-red"></span>
+            <span class="traffic-light tl-yellow"></span>
+            <span class="traffic-light tl-green"></span>
+          </div>
+          <span class="window-title">${app.title}</span>
+          <div style="width:40px;"></div>
+        </div>
+        <div class="window-body" id="body-${id}"></div>
+      `;
+      this.layer.appendChild(win);
+      this.openWindows.set(id, win);
+      win.querySelector('.tl-red').addEventListener('click', () => { win.remove(); this.openWindows.delete(id); playSound('trash'); });
+      win.querySelector('.tl-yellow').addEventListener('click', () => win.style.display = 'none');
+      win.addEventListener('mousedown', () => this.focus(id));
+      this.makeDraggable(win, win.querySelector('.window-header'));
+      app.render(win.querySelector(`#body-${id}`), (target) => this.openApp(target));
+      this.focus(id);
+    }
+
+    focus(id) {
+      this.topZ++; const win = this.openWindows.get(id);
+      if (win) { win.style.zIndex = this.topZ; document.getElementById('active-app-name').innerText = APPS[id].title; }
+    }
+
+    makeDraggable(win, handle) {
+      let drag = false, sx, sy, il, it;
+      handle.addEventListener('mousedown', e => {
+        if (e.target.classList.contains('traffic-light')) return;
+        drag = true; sx = e.clientX; sy = e.clientY; il = win.offsetLeft; it = win.offsetTop;
+      });
+      document.addEventListener('mousemove', e => { if (drag) { win.style.left = `${il + e.clientX - sx}px`; win.style.top = `${it + e.clientY - sy}px`; } });
+      document.addEventListener('mouseup', () => drag = false);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => { new WindowManager(); });
+  </script>
+</body>
+</html>

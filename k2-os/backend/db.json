@@ -1,0 +1,50 @@
+{
+  "profile": {
+    "name": "Alex Vance",
+    "role": "Founder & Software Engineer",
+    "motto": "Build. Learn. Lead.",
+    "mountainGoal": "Conquer K2 - Launching K2.OS Personal Operating System",
+    "joinedDate": "Summer 2026"
+  },
+  "interests": [
+    "Artificial Intelligence & LLMs",
+    "System Architecture",
+    "Human-Computer Interaction",
+    "High-Altitude Expedition Philosophy",
+    "Productivity Engineering",
+    "Full-Stack Web Development"
+  ],
+  "projects": [
+    { "id": "proj-1", "title": "K2.OS Version 1 Proof of Concept", "status": "In Progress", "goal": "Establish personal AI operating system foundation by end of Summer 2026" },
+    { "id": "proj-2", "title": "Neural Memory Core Integration", "status": "Active", "goal": "Inject persistent user context into AI chat" },
+    { "id": "proj-3", "title": "Apple Interface Design System", "status": "Completed", "goal": "Build pixel-perfect macOS/iOS glassmorphic frontend" }
+  ],
+  "tasks": [
+    { "id": "task-1", "title": "Test K2.OS Neural Journal & AI Assistant", "priority": "High", "category": "Project", "status": "Pending", "dueDate": "2026-08-15" },
+    { "id": "task-2", "title": "Refine Memory Core profile & interest tags", "priority": "Medium", "category": "Personal", "status": "Pending", "dueDate": "2026-08-18" },
+    { "id": "task-3", "title": "Verify GitHub repository synchronization", "priority": "High", "category": "Project", "status": "Completed", "dueDate": "2026-08-09" }
+  ],
+  "journals": [
+    {
+      "id": "j-1",
+      "title": "The Philosophy Behind K2.OS",
+      "tag": "Reflection",
+      "date": "2026-08-09 14:30",
+      "content": "Unlike Everest, K2 is known for being difficult, demanding, and unforgiving. Success requires preparation, discipline, teamwork, adaptability, and resilience.\n\nEveryone is climbing their own mountain. K2.OS is intended to act as a personal basecamp, navigation system, and command center for that journey."
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "wallpaper": "k2-snow",
+    "soundEnabled": true,
+    "volume": 0.6
+  },
+  "chatHistory": [
+    {
+      "sender": "ai",
+      "text": "Welcome to K2.OS Version 1 — Connected Backend Active on localhost:3000. How can I assist with your ascent today?",
+      "time": "12:00 PM",
+      "memoryInjected": true
+    }
+  ]
+}
